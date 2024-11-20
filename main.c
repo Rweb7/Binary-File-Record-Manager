@@ -13,7 +13,7 @@ struct StudentRecord // Structure to store student records.
 {
     char studentID[10];
     char studentName[20];
-    char email[20];
+    char email[30];
     char courseID[10];
     char grade[2];
 };
@@ -38,21 +38,21 @@ void createBinaryFile() // Main menu option #1
     }
 
     printf("Enter Student ID: ");
-    scanf("%s", student.studentID);
+    scanf("%10s", student.studentID);
     printf("Enter Student Name: ");
-    scanf("%s", student.studentName);
+    scanf("%20s", student.studentName);
     printf("Enter Email ID: ");
-    scanf("%s", student.email);
+    scanf("%30s", student.email);
     printf("Enter Course ID: ");
-    scanf("%s", student.courseID);
+    scanf("%10s", student.courseID);
     printf("Enter Grade: ");
-    scanf("%s", student.grade);
+    scanf("%3s", student.grade);
 
     fwrite(&student, sizeof(struct StudentRecord), 1, file); // Write the structure to the file.
 
     fclose(file); // Close the file.
 
-    printf("Record added successfully.\n"); // Notify user of success.
+    printf("Record added successfully.\n");
 }
 
 // --------------------------DISPLAY STUDENT INFORMATION----------------------------------//
@@ -84,7 +84,7 @@ void displayBinaryFile() // Main menu option #2
         printf("Student Name: %s\n", student.studentName);
         printf("Email ID: %s\n", student.email);
         printf("Course ID: %s\n", student.courseID);
-        printf("Grade: %s\n\n", student.grade);
+        printf("Grade: %s\n", student.grade);
     }
 
     fclose(file);
@@ -112,7 +112,7 @@ void seekRecord() // Main menu option #3
     }
 
     printf("Enter Student ID to search: ");
-    scanf("%s", studentID);
+    scanf("%9s", studentID);
 
 
     while (fread(&student, sizeof(struct StudentRecord), 1, file)) // Read the file and compare each record's student ID.
@@ -162,7 +162,7 @@ void updateBinaryFile() // Main menu option #4
     }
 
     printf("Enter Student ID to update: ");
-    scanf("%s", studentID);
+    scanf("%9s", studentID);
 
 
     while (fread(&student, sizeof(struct StudentRecord), 1, file)) // Read the file and compare each record's student ID.
@@ -171,15 +171,14 @@ void updateBinaryFile() // Main menu option #4
         if (strcmp(student.studentID, studentID) == 0) // If found...
 
         {
-
             printf("Enter new student name: "); // Prompt the user to enter new details.
-            scanf("%s", student.studentName);
+            scanf("%19s", student.studentName);
             printf("Enter new email: ");
-            scanf("%s", student.email);
+            scanf("%19s", student.email);
             printf("Enter new course ID: ");
-            scanf("%s", student.courseID);
+            scanf("%9s", student.courseID);
             printf("Enter new grade: ");
-            scanf("%s", student.grade);
+            scanf("%1s", student.grade);
 
             fseek(file, -sizeof(struct StudentRecord), SEEK_CUR); // Move back one record.
 
@@ -223,7 +222,7 @@ void deleteBinaryFile() // Main menu option #5
     }
 
     printf("Enter Student ID to delete: ");
-    scanf("%s", studentID);
+    scanf("%9s", studentID);
 
 
     while (fread(&student, sizeof(struct StudentRecord), 1, file)) // Read the file and copy records except the one to be deleted.
@@ -258,13 +257,13 @@ int main()
 
     {
         printf("\n------------------MAIN MENU------------------\n\n");
-        printf("1. Create the Binary File\n");
-        printf("2. Display the contents of the file\n");
-        printf("3. Seek a specific record\n");
-        printf("4. Update the contents of a record\n");
-        printf("5. Delete a record for the specific name\n");
+        printf("1. Create the Binary File\n\n");
+        printf("2. Display the contents of the file\n\n");
+        printf("3. Seek a specific record\n\n");
+        printf("4. Update the contents of a record\n\n");
+        printf("5. Delete a record for the specific name\n\n");
         printf("6. Exit\n\n");
-        printf("Please enter your choice .... \n");
+        printf("Please enter your choice .... \n\n");
         scanf("%d", &choice);
 
 
@@ -298,4 +297,6 @@ int main()
                 printf("Invalid choice. Please try again.\n");
         }
     }
+
+    return 0;
 }
