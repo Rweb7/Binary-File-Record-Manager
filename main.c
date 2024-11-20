@@ -5,257 +5,297 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include <time.h>
 #include <string.h>
 
-struct StudentRecord  // Student record structure.
+
+struct StudentRecord // Structure to store student records.
 
 {
-     char studentID[10];
-     char studentName[20];
-     char email[20];
-     char courseID[10];
-     char grade[2];
+    char studentID[10];
+    char studentName[20];
+    char email[20];
+    char courseID[10];
+    char grade[2];
 };
-// --------------------------ADD STUDENT INFORMATION----------------------------------
+
+// --------------------------ADD STUDENT INFORMATION----------------------------------//
 
 void createBinaryFile() // Main menu option #1
 
 {
-     struct StudentRecord student;
+    struct StudentRecord student; // Create an instance of StudentRecord structure.
 
-     FILE *file; // Declare the file pointer.
+    FILE *file; // Declare the file pointer.
 
-     file = fopen("student.dat", "ab"); // Append binary mode.
+    file = fopen("students.dat", "ab"); // Open the binary file for appending.
 
-     if (file == NULL)
+    if (file == NULL) // Check if file opened successfully.
 
-     {
-          printf("Error creating file.\n");
-          return;
-     }
+    {
+        printf("Error creating file.\n");
 
-     printf("Enter Student ID: ");
-     scanf("%s", student.studentID);
-     printf("Enter Student Name: ");
-     scanf("%s", student.studentName);
-     printf("Enter Email ID: ");
-     scanf("%s", student.email);
-     printf("Enter Course ID: ");
-     scanf("%s", student.courseID);
-     printf("Enter Grade: ");
-     scanf("%s", student.grade);
+        return;
+    }
 
-     fwrite(&student, sizeof(struct StudentRecord), 1, file);
+    printf("Enter Student ID: ");
+    scanf("%s", student.studentID);
+    printf("Enter Student Name: ");
+    scanf("%s", student.studentName);
+    printf("Enter Email ID: ");
+    scanf("%s", student.email);
+    printf("Enter Course ID: ");
+    scanf("%s", student.courseID);
+    printf("Enter Grade: ");
+    scanf("%s", student.grade);
 
-     fclose(file);
+    fwrite(&student, sizeof(struct StudentRecord), 1, file); // Write the structure to the file.
 
-     printf("Record added successfully.\n");
+    fclose(file); // Close the file.
+
+    printf("Record added successfully.\n"); // Notify user of success.
 }
-// --------------------------DISPLAY STUDENT INFORMATION----------------------------------
+
+// --------------------------DISPLAY STUDENT INFORMATION----------------------------------//
 
 void displayBinaryFile() // Main menu option #2
 
 {
-     struct StudentRecord student;
+    struct StudentRecord student;
 
-     FILE *file = fopen("students.dat", "rb");
+    FILE *file;
 
-     if (file == NULL)
+    file = fopen("students.dat", "rb"); // Open the binary file for reading
 
-     {
-          printf("Error opening file.\n");
+    if (file == NULL) // Check if file opened successfully.
 
-          return;
-     }
+    {
+        printf("Error opening file.\n");
 
-     printf("\n------------------STUDENT RECORDS------------------\n");
-     while (fread(&student, sizeof(struct StudentRecord), 1, file)) {
-          printf("Student ID: %s\n", student.studentID);
-          printf("Student Name: %s\n", student.studentName);
-          printf("Email ID: %s\n", student.email);
-          printf("Course ID: %s\n", student.courseID);
-          printf("Grade: %s\n\n", student.grade);
-     }
+        return;
+    }
 
-     fclose(file);
+
+    printf("\n------------------STUDENT RECORDS------------------\n");
+
+    while (fread(&student, sizeof(struct StudentRecord), 1, file))
+
+    {
+        printf("Student ID: %s\n", student.studentID);
+        printf("Student Name: %s\n", student.studentName);
+        printf("Email ID: %s\n", student.email);
+        printf("Course ID: %s\n", student.courseID);
+        printf("Grade: %s\n\n", student.grade);
+    }
+
+    fclose(file);
 }
-// --------------------------FIND STUDENT INFORMATION----------------------------------
+
+// --------------------------FIND STUDENT INFORMATION----------------------------------//
 
 void seekRecord() // Main menu option #3
 
 {
-     struct StudentRecord student;
+    struct StudentRecord student;
 
-     char studentID[10];
+    char studentID[10];
 
-     FILE *file = fopen("students.dat", "rb");
+    FILE *file;
 
-     if (file == NULL)
+    file = fopen("students.dat", "rb"); // Open the binary file for reading.
 
-     {
-          printf("Error opening file.\n");
-          return;
-     }
+    if (file == NULL) // Check if file opened successfully.
 
-     printf("Enter Student ID to search: ");
-     scanf("%s", studentID);
+    {
+        printf("Error opening file.\n");
 
-     while (fread(&student, sizeof(struct StudentRecord), 1, file))
+        return;
+    }
 
-     {
+    printf("Enter Student ID to search: ");
+    scanf("%s", studentID);
 
-          if (strcmp(student.studentID, studentID) == 0)
 
-          {
-               printf("Record found:\n");
-               printf("Student ID: %s\n", student.studentID);
-               printf("Student Name: %s\n", student.studentName);
-               printf("Email ID: %s\n", student.email);
-               printf("Course ID: %s\n", student.courseID);
-               printf("Grade: %s\n", student.grade);
+    while (fread(&student, sizeof(struct StudentRecord), 1, file)) // Read the file and compare each record's student ID.
 
-               fclose(file);
+    {
+        if (strcmp(student.studentID, studentID) == 0) // If record found...
 
-               return;
-          }
-     }
+        {
+            printf("Record found:\n");
+            printf("Student ID: %s\n", student.studentID);
+            printf("Student Name: %s\n", student.studentName);
+            printf("Email ID: %s\n", student.email);
+            printf("Course ID: %s\n", student.courseID);
+            printf("Grade: %s\n", student.grade);
+
+            fclose(file);
+
+            return;
+        }
+    }
+
+
+    printf("Record not found.\n"); // If record not found...
+
+    fclose(file);
 }
-// --------------------------DISPLAY STUDENT INFORMATION----------------------------------
+
+// --------------------------UPDATE STUDENT INFORMATION----------------------------------//
 
 void updateBinaryFile() // Main menu option #4
 
 {
-     struct StudentRecord student;
-     char studentID[10];
-     FILE *file = fopen("students.dat", "rb+"); // Read/write binary mode
+    struct StudentRecord student; // Create an instance of "StudentRecord"" structure.
 
-     if (file == NULL)
+    char studentID[10];
 
-     {
-          printf("Error opening file.\n");
+    FILE *file;
 
-          return;
-     }
+    file = fopen("students.dat", "rb+"); // Open the binary file for reading and writing.
 
-     printf("Enter Student ID to update: ");
-     scanf("%s", studentID);
+    if (file == NULL) // Check if file opened successfully.
 
-     while (fread(&student, sizeof(struct StudentRecord), 1, file))
+    {
+        printf("Error opening file.\n");
 
-     {
-          if (strcmp(student.studentID, studentID) == 0)
+        return;
+    }
 
-          {
-               printf("Enter new student name: ");
-               scanf("%s", student.studentName);
-               printf("Enter new email: ");
-               scanf("%s", student.email);
-               printf("Enter new course ID: ");
-               scanf("%s", student.courseID);
-               printf("Enter new grade: ");
-               scanf("%s", student.grade);
+    printf("Enter Student ID to update: ");
+    scanf("%s", studentID);
 
-               fseek(file, -sizeof(struct StudentRecord), SEEK_CUR); // Move back one record
-               fwrite(&student, sizeof(struct StudentRecord), 1, file);
-               printf("Record updated successfully.\n");
 
-               fclose(file);
+    while (fread(&student, sizeof(struct StudentRecord), 1, file)) // Read the file and compare each record's student ID.
 
-               return;
-          }
-     }
+    {
+        if (strcmp(student.studentID, studentID) == 0) // If found...
 
-     printf("Record not found.\n");
+        {
 
-     fclose(file);
+            printf("Enter new student name: "); // Prompt the user to enter new details.
+            scanf("%s", student.studentName);
+            printf("Enter new email: ");
+            scanf("%s", student.email);
+            printf("Enter new course ID: ");
+            scanf("%s", student.courseID);
+            printf("Enter new grade: ");
+            scanf("%s", student.grade);
+
+            fseek(file, -sizeof(struct StudentRecord), SEEK_CUR); // Move back one record.
+
+            fwrite(&student, sizeof(struct StudentRecord), 1, file); // Update record.
+
+            printf("Record updated successfully.\n");
+
+            fclose(file);
+
+            return;
+        }
+    }
+
+
+    printf("Record not found.\n"); // If record not found.
+
+    fclose(file);
 }
+
+// --------------------------DELETE STUDENT INFORMATION----------------------------------//
 
 void deleteBinaryFile() // Main menu option #5
 
 {
-     struct StudentRecord student;
+    struct StudentRecord student;
 
-     char studentID[10];
+    char studentID[10];
 
-     FILE *file = fopen("students.dat", "rb");
-     FILE *tempFile = fopen("temp.dat", "wb");
+    FILE *file;
 
-     if (file == NULL || tempFile == NULL)
+    file = fopen("students.dat", "rb"); // Open the binary file for reading.
 
-     {
-          printf("Error opening file.\n");
+    FILE *tempFile = fopen("temp.dat", "wb"); // Open a temporary file for writing.
 
-          return;
-     }
+    if (file == NULL || tempFile == NULL) // Check if files opened successfully.
 
-     printf("Enter Student ID to delete: ");
-     scanf("%s", studentID);
+    {
+        printf("Error opening file.\n");
 
-     while (fread(&student, sizeof(struct StudentRecord), 1, file))
+        return;
+    }
 
-     {
-          if (strcmp(student.studentID, studentID) != 0)
+    printf("Enter Student ID to delete: ");
+    scanf("%s", studentID);
 
-          {
-               fwrite(&student, sizeof(struct StudentRecord), 1, tempFile);
-          }
-     }
 
-     fclose(file);
+    while (fread(&student, sizeof(struct StudentRecord), 1, file)) // Read the file and copy records except the one to be deleted.
 
-     fclose(tempFile);
+    {
+        if (strcmp(student.studentID, studentID) != 0) // If not the record to delete.
 
-     remove("students.dat");
-     rename("temp.dat", "students.dat");
+        {
+            fwrite(&student, sizeof(struct StudentRecord), 1, tempFile); // Copy record.
+        }
+    }
 
-     printf("Record deleted successfully.\n");
+
+    fclose(file); // Close both files
+    fclose(tempFile); //  "      "
+
+
+    remove("students.dat"); // Delete the original file and rename the temporary file.
+    rename("temp.dat", "students.dat"); //    "                "
+
+    printf("Record deleted successfully.\n");
 }
 
-int main() // Functionality of Binary File Record Manager.
+// --------------------------MAIN MENU & CALL FUNCTIONS----------------------------------//
+
+int main()
 
 {
-     int choice;
+    int choice; // Variable to store user's choice.
 
-     while (1)
+    while (1) // Infinite loop to keep the menu active.
 
-     {
-          printf("\n------------------MAIN MENU------------------\n\n");
-          printf("1. Create the Binary File\n2. Display the contents of the file\n3. Seek a specific record\n");
-          printf("4. Update the contents of a record\n5. Delete a record for the specific name\n6. Exit\n\n");
-          printf("Enter your choice: \n");
-          scanf("%d", &choice);
+    {
+        printf("\n------------------MAIN MENU------------------\n\n");
+        printf("1. Create the Binary File\n");
+        printf("2. Display the contents of the file\n");
+        printf("3. Seek a specific record\n");
+        printf("4. Update the contents of a record\n");
+        printf("5. Delete a record for the specific name\n");
+        printf("6. Exit\n\n");
+        printf("Please enter your choice .... \n");
+        scanf("%d", &choice);
 
-          switch (choice)
 
-          {
-               case 1:
-                    createBinaryFile();
-               break;
+        switch (choice) // Switch case to call appropriate function based on user's choice.
 
-               case 2:
-                    displayBinaryFile();
-               break;
+        {
+            case 1:
+                createBinaryFile();
+                break;
 
-               case 3:
-                    seekRecord();
-               break;
+            case 2:
+                displayBinaryFile();
+                break;
 
-               case 4:
-                    updateBinaryFile();
-               break;
+            case 3:
+                seekRecord();
+                break;
 
-               case 5:
-                    deleteBinaryFile();
-               break;
+            case 4:
+                updateBinaryFile();
+                break;
 
-               case 6:
-                    exit(0);
+            case 5:
+                deleteBinaryFile();
+                break;
 
-               default:
-                    printf("Invalid choice. Please try again.\n");
-          }
-     }
+            case 6:
+                exit(0); // Exit the program
 
-     return 0;
+            default:
+                printf("Invalid choice. Please try again.\n");
+        }
+    }
 }
